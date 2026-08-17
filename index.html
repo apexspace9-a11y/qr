@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1020" />
-  <meta name="description" content="QR Banking Studio - tạo VietQR nhanh, chạy tĩnh trên GitHub Pages." />
+  <meta name="theme-color" content="#080b14" />
+  <meta name="description" content="QR Banking Studio - thiết kế, xem trước và xuất VietQR trực tiếp trên GitHub Pages." />
   <title>QR Banking Studio</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -16,27 +16,49 @@
     <header class="topbar">
       <a class="brand" href="./" aria-label="QR Banking Studio">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" role="img">
-            <path d="M4 4h9v9H4V4Zm3 3v3h3V7H7Zm12-3h9v9h-9V4Zm3 3v3h3V7h-3ZM4 19h9v9H4v-9Zm3 3v3h3v-3H7Zm11-4h4v4h-4v-4Zm5 5h5v5h-5v-5Zm-5 1h3v4h-3v-4Zm7-7h3v4h-3v-4Z" />
-          </svg>
+          <svg viewBox="0 0 32 32" role="img"><path d="M4 4h9v9H4V4Zm3 3v3h3V7H7Zm12-3h9v9h-9V4Zm3 3v3h3V7h-3ZM4 19h9v9H4v-9Zm3 3v3h3v-3H7Zm11-4h4v4h-4v-4Zm5 5h5v5h-5v-5Zm-5 1h3v4h-3v-4Zm7-7h3v4h-3v-4Z" /></svg>
         </span>
         <span>
           <strong>QR Banking</strong>
           <small>Studio</small>
         </span>
       </a>
-      <div class="status-pill"><span></span> Static · GitHub Pages</div>
+      <div class="top-actions">
+        <span class="studio-badge">STUDIO MODE</span>
+        <div class="status-pill"><span></span> GitHub Pages</div>
+      </div>
     </header>
 
     <section class="hero">
       <div>
-        <p class="eyebrow">VIETQR PAYMENT TOOL</p>
-        <h1>Tạo mã chuyển khoản<br><span>gọn, nhanh, đúng việc.</span></h1>
-        <p class="subhead">Chọn ngân hàng, nhập thông tin nhận tiền và tạo QR có thể quét bằng ứng dụng ngân hàng. Không lưu số tài khoản trên máy chủ của dự án.</p>
+        <p class="eyebrow">VIETQR CREATIVE WORKSPACE</p>
+        <h1>Không chỉ tạo QR.<br><span>Thiết kế cách bạn nhận tiền.</span></h1>
+        <p class="subhead">“Studio” nghĩa là bạn có một workspace để tạo nội dung, xem trước tức thời, chọn phong cách, lưu cấu hình và xuất một thẻ thanh toán hoàn chỉnh. QR thanh toán vẫn giữ chuẩn VietQR, phần sáng tạo nằm ở lớp trình bày xung quanh.</p>
       </div>
       <div class="mini-note">
-        <span>⚡</span>
-        <p><strong>Không cần backend.</strong><br />QR được tạo qua VietQR Quick Link.</p>
+        <span>✦</span>
+        <p><strong>Live Studio.</strong><br />Thay đổi dữ liệu là preview cập nhật tự động, không cần bấm tạo lại liên tục.</p>
+      </div>
+    </section>
+
+    <section class="studio-toolbar panel-lite" aria-label="Thanh công cụ Studio">
+      <div class="toolbar-item">
+        <span class="toolbar-icon">⚡</span>
+        <div><strong>Live Preview</strong><small>Tự cập nhật khi đủ dữ liệu</small></div>
+        <label class="switch" title="Bật hoặc tắt xem trước tự động">
+          <input id="livePreview" type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+      <div class="toolbar-item">
+        <span class="toolbar-icon">💾</span>
+        <div><strong>Local Draft</strong><small>Lưu trên trình duyệt này</small></div>
+        <button id="saveDraftBtn" class="mini-button" type="button">Lưu</button>
+      </div>
+      <div class="toolbar-item">
+        <span class="toolbar-icon">↺</span>
+        <div><strong>Lịch sử</strong><small>6 QR gần nhất</small></div>
+        <button id="historyBtn" class="mini-button" type="button">Mở</button>
       </div>
     </section>
 
@@ -45,7 +67,7 @@
         <div class="panel-heading">
           <div>
             <span class="step">01</span>
-            <h2>Thông tin chuyển khoản</h2>
+            <div><h2>Nội dung QR</h2><small>Thông tin chuyển khoản</small></div>
           </div>
           <button type="button" id="resetBtn" class="text-button">Đặt lại</button>
         </div>
@@ -54,9 +76,7 @@
           <span>Ngân hàng</span>
           <div class="bank-control">
             <img id="bankLogo" class="bank-logo" alt="" hidden />
-            <select id="bank" required>
-              <option value="">Đang tải danh sách ngân hàng…</option>
-            </select>
+            <select id="bank" required><option value="">Đang tải danh sách ngân hàng…</option></select>
           </div>
           <small id="bankHint">Dữ liệu ngân hàng được tải từ VietQR.</small>
         </label>
@@ -74,9 +94,14 @@
 
         <label class="field full">
           <span>Số tiền</span>
-          <div class="money-input">
-            <input id="amount" inputmode="numeric" maxlength="17" placeholder="0" />
-            <strong>VND</strong>
+          <div class="money-input"><input id="amount" inputmode="numeric" maxlength="17" placeholder="0" /><strong>VND</strong></div>
+          <div class="amount-presets" aria-label="Số tiền nhanh">
+            <button type="button" data-amount="50000">50K</button>
+            <button type="button" data-amount="100000">100K</button>
+            <button type="button" data-amount="200000">200K</button>
+            <button type="button" data-amount="500000">500K</button>
+            <button type="button" data-amount="1000000">1M</button>
+            <button type="button" data-amount="">Tự nhập</button>
           </div>
           <small id="amountPreview">Có thể bỏ trống để người chuyển tự nhập.</small>
         </label>
@@ -87,9 +112,11 @@
           <small><span id="messageCount">0</span>/50 ký tự</small>
         </label>
 
+        <div class="divider"><span>Thiết kế Studio</span></div>
+
         <div class="field-grid">
           <label class="field">
-            <span>Mẫu hiển thị</span>
+            <span>Mẫu VietQR</span>
             <select id="template">
               <option value="compact2">Compact 2</option>
               <option value="compact">Compact</option>
@@ -98,18 +125,41 @@
             </select>
           </label>
           <label class="field">
-            <span>Định dạng ảnh</span>
-            <select id="format">
-              <option value="png">PNG</option>
-              <option value="jpg">JPG</option>
-            </select>
+            <span>Định dạng QR</span>
+            <select id="format"><option value="png">PNG</option><option value="jpg">JPG</option></select>
           </label>
         </div>
+
+        <label class="field full">
+          <span>Phong cách thẻ</span>
+          <div class="theme-picker" role="radiogroup" aria-label="Phong cách thẻ QR">
+            <button type="button" class="theme-option active" data-theme="midnight"><i></i><b>Midnight</b></button>
+            <button type="button" class="theme-option" data-theme="mint"><i></i><b>Mint</b></button>
+            <button type="button" class="theme-option" data-theme="paper"><i></i><b>Paper</b></button>
+            <button type="button" class="theme-option" data-theme="sunset"><i></i><b>Sunset</b></button>
+          </div>
+        </label>
+
+        <div class="field-grid">
+          <label class="field">
+            <span>Tiêu đề thẻ</span>
+            <input id="cardTitle" maxlength="36" value="Quét mã để chuyển khoản" />
+          </label>
+          <label class="field">
+            <span>Lời nhắn</span>
+            <input id="cardNote" maxlength="60" placeholder="VD: Cảm ơn bạn!" />
+          </label>
+        </div>
+
+        <label class="field full range-field">
+          <span>Kích thước QR <b id="qrSizeValue">320px</b></span>
+          <input id="qrSize" type="range" min="240" max="420" step="20" value="320" />
+        </label>
 
         <div id="formError" class="form-error" role="alert" hidden></div>
 
         <button class="primary-button" type="submit">
-          <span>Tạo mã VietQR</span>
+          <span>Cập nhật QR ngay</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </button>
       </form>
@@ -118,49 +168,69 @@
         <div class="panel-heading">
           <div>
             <span class="step">02</span>
-            <h2>Xem trước</h2>
+            <div><h2>Live Canvas</h2><small>Thẻ QR xuất ra</small></div>
           </div>
           <span id="readyBadge" class="ready-badge">Chờ dữ liệu</span>
         </div>
 
-        <div class="qr-stage">
-          <div id="qrPlaceholder" class="qr-placeholder">
-            <div class="placeholder-grid" aria-hidden="true"></div>
-            <p>QR sẽ xuất hiện ở đây</p>
-            <small>Điền ngân hàng và số tài khoản</small>
+        <div id="cardCanvas" class="card-canvas theme-midnight">
+          <div class="canvas-head">
+            <div>
+              <span class="canvas-kicker">QR BANKING STUDIO</span>
+              <h3 id="canvasTitle">Quét mã để chuyển khoản</h3>
+            </div>
+            <div id="canvasBankBadge" class="canvas-bank-badge">VIETQR</div>
           </div>
-          <img id="qrImage" alt="Mã VietQR chuyển khoản" hidden />
+
+          <div class="qr-stage">
+            <div id="qrPlaceholder" class="qr-placeholder">
+              <div class="placeholder-grid" aria-hidden="true"></div>
+              <p>QR sẽ xuất hiện ở đây</p>
+              <small>Chọn ngân hàng và nhập số tài khoản</small>
+            </div>
+            <img id="qrImage" alt="Mã VietQR chuyển khoản" hidden />
+          </div>
+
+          <div class="canvas-details">
+            <div><span>NGÂN HÀNG</span><strong id="summaryBank">—</strong></div>
+            <div><span>TÀI KHOẢN</span><strong id="summaryAccount">—</strong></div>
+            <div><span>SỐ TIỀN</span><strong id="summaryAmount">Tùy chọn</strong></div>
+          </div>
+          <p id="canvasNote" class="canvas-note">Tạo bởi QR Banking Studio</p>
         </div>
 
-        <div class="summary-card">
-          <div>
-            <span>Ngân hàng</span>
-            <strong id="summaryBank">—</strong>
-          </div>
-          <div>
-            <span>Tài khoản</span>
-            <strong id="summaryAccount">—</strong>
-          </div>
-          <div>
-            <span>Số tiền</span>
-            <strong id="summaryAmount">Tùy chọn</strong>
-          </div>
+        <div class="action-grid action-grid-4">
+          <button id="downloadBtn" class="secondary-button strong-action" type="button" disabled>Xuất poster PNG</button>
+          <button id="shareBtn" class="secondary-button" type="button" disabled>Chia sẻ</button>
+          <button id="copyBtn" class="secondary-button" type="button" disabled>Copy link</button>
+          <button id="openBtn" class="secondary-button" type="button" disabled>Mở QR gốc</button>
         </div>
 
-        <div class="action-grid">
-          <button id="copyBtn" class="secondary-button" type="button" disabled>Copy link QR</button>
-          <button id="openBtn" class="secondary-button" type="button" disabled>Mở ảnh QR</button>
-        </div>
-
-        <p class="privacy-note">🔒 Trang này không có cơ sở dữ liệu riêng. Đừng đặt API key bí mật vào mã nguồn GitHub Pages vì, khá bất ngờ, bí mật công khai thì không còn là bí mật.</p>
+        <p class="privacy-note">🔒 Dữ liệu cấu hình/lịch sử chỉ nằm trong <code>localStorage</code> của trình duyệt. QR được tải qua VietQR Quick Link. Không có database riêng của dự án.</p>
       </aside>
     </section>
 
+    <section class="studio-explainer panel-lite">
+      <div><span class="step">03</span><h2>Tại sao gọi là “Studio”?</h2></div>
+      <div class="explainer-grid">
+        <article><b>Compose</b><p>Soạn dữ liệu chuyển khoản và preset số tiền.</p></article>
+        <article><b>Design</b><p>Chọn phong cách thẻ, tiêu đề, lời nhắn và kích thước.</p></article>
+        <article><b>Preview</b><p>Canvas cập nhật gần như tức thời khi bạn chỉnh.</p></article>
+        <article><b>Export</b><p>Xuất poster PNG, chia sẻ link và lưu lịch sử cục bộ.</p></article>
+      </div>
+    </section>
+
     <footer>
-      <p>QR Banking Studio · Static web app</p>
-      <p>VietQR™ thuộc NAPAS. Dự án demo này không đại diện cho ngân hàng hoặc NAPAS.</p>
+      <p>QR Banking Studio · Creative VietQR workspace</p>
+      <p>VietQR™ thuộc NAPAS. Dự án độc lập, không đại diện cho ngân hàng hoặc NAPAS.</p>
     </footer>
   </main>
+
+  <dialog id="historyDialog" class="history-dialog">
+    <div class="dialog-head"><div><span>LỊCH SỬ CỤC BỘ</span><h3>QR gần đây</h3></div><button id="closeHistoryBtn" type="button" aria-label="Đóng">×</button></div>
+    <div id="historyList" class="history-list"></div>
+    <div class="dialog-foot"><button id="clearHistoryBtn" class="text-button danger-text" type="button">Xóa toàn bộ lịch sử</button></div>
+  </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="./app.js" defer></script>
